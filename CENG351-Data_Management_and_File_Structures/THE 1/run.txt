@@ -1,0 +1,16 @@
+# How to run PA1 on inek machines
+pwd
+/home/stf2/rfcekinel/Desktop/MusicDB/src/ceng/ceng351/musicdb
+
+javac -classpath "/home/stf2/rfcekinel/Desktop/MusicDB/src/ceng/ceng351/musicdb/:/home/stf2/rfcekinel/Desktop/MusicDB/mysql-connector-java-8.0.11.jar" *.java
+java -classpath "/home/stf2/rfcekinel/Desktop/MusicDB/src/:/home/stf2/rfcekinel/Desktop/MusicDB/mysql-connector-java-8.0.11.jar"  ceng/ceng351/musicdb/Evaluation
+
+# How to run Recitation codes on inek machines
+pwd
+/home/stf2/rfcekinel/Desktop/CPL/src/ceng/ceng351/recitation
+
+javac -classpath "/home/stf2/frcekinel/Desktop/CPL/src/ceng/ceng351/recitation/:/home/stf2/rfcekinel/Desktop/CPL/mysql-connector-java-8.0.11.jar" *.java
+java -classpath "/home/stf2/rfcekinel/Desktop/CPL/src/:/home/stf2/rfcekinel/Desktop/CPL/mysql-connector-java-8.0.11.jar" ceng/ceng351/recitation/Evaluation
+
+
+

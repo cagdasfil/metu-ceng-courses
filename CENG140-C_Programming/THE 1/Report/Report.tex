@@ -1,0 +1,146 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage{amsmath}
+
+
+\usepackage[hmargin=3cm,vmargin=6.0cm]{geometry}
+%\topmargin=0cm
+\topmargin=-2cm
+\addtolength{\textheight}{6.5cm}
+\addtolength{\textwidth}{2.0cm}
+%\setlength{\leftmargin}{-5cm}
+\setlength{\oddsidemargin}{0.0cm}
+\setlength{\evensidemargin}{0.0cm}
+
+\newcommand{\HRule}{\rule{\linewidth}{1mm}}
+
+%misc libraries goes here
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\begin{document}
+
+
+\noindent
+\HRule \\[3mm]
+\begin{flushright}
+
+                                         \LARGE \textbf{CENG 140}  \\[4mm]
+                                         \Large C Programming \\[4mm]
+                                        \normalsize Section 2 (Selim Temizer)\\
+                                        \normalsize      Spring '2017-2018 \\
+                                           \Large   Take Home Exam 1 - Report \\
+                    \normalsize Deadline: April 8, 23:59 \\
+                   
+\end{flushright}
+\HRule
+
+\section*{ANSWER 1}
+$\textbf{int rand(void)}$ which is a function in the $<$stdlib.h$>$ returns an integer in the range of 0 to $\verb|RAND_MAX|$.
+$\verb|RAND_MAX|$ is a constant whose value might change in different implementations but it is supposed to be at least $2^{15}$-1.\\
+\\
+In the function $\textit{randomIntegerMaxNaive}$, we are taking an integer in the range of $[0:\verb|RAND_MAX|]$ by using $\textit{rand}$ function. Then, we are mapping the integer from range of $[0:\verb|RAND_MAX|]$ to range of $[0:\textbf{max}]$ with the $mod(\textbf{max}+1)$ operation. While we are doing that, we are changing the possibility of choosing an integer between 0 and $\textbf{max}$ because it is not guaranteed that the number of integers in $[0:\verb|RAND_MAX|]$ which is $\verb|RAND_MAX|+1$ is divisible by $\textbf{max}+1$. In the tail of $[0:\verb|RAND_MAX|]$, there can be numbers that increase the frequency of some numbers in $[0:\textbf{max}]$ after the $mod(\textbf{max}+1)$ operation. If so, numbers in the range of $[0:\verb|RAND_MAX|\%(\textbf{max}+1)]$ have more chance to be chosen than the numbers in the range of $[\verb|RAND_MAX|\%(\textbf{max}+1)+1:\textbf{max}]$. On the other hand, the function $\textit{randomIntegerMaxUnBiased}$ gives more fair numbers by reducing the $\verb|RAND_MAX|$ to a new value, namely $\textbf{adjustedRandMax}$. Hence, all of the numbers in $[0:\textbf{max}]$ have same frequency with respect to the $mod(\textbf{max}+1)$ operation on the set $[0:\textbf{adjustedRandMax}]$. (Note that 
+$ \textbf{adjustedRandMax}\%(\textbf{max}+1)=\textbf{max})$\\
+\\
+For more clear explanation,\\
+Let's say $A$ is an array that contains integers between $0$ and $\verb|RAND_MAX|$:
+\begin{center}
+$A=[0,1,2,3,4,...\hspace*{1cm}             ...,\verb|RAND_MAX|]$
+\end{center}
+Then, Let's define $B$ such as $B[i]=A[i]\%(\textbf{max}+1)$, $\forall i \in \{0,1,2,...,\verb|RAND_MAX|\}: $
+\begin{center}
+$B=[0,1,2,...,\textbf{max},0,1,2,...,\textbf{max},...\hspace*{1cm}...,0,1,2,...,\verb|RAND_MAX|\%(\textbf{max}+1)]$
+\end{center}
+If we illustrate $B$ as a concatenation of arrays:
+\begin{center}
+$B=[0,1,2,...,\textbf{max}]+[0,1,2,...,\textbf{max}]+ ... +[0,1,2, ... ,\verb|RAND_MAX|\%(\textbf{max}+1)]$
+\end{center}
+As it can be seen from above illustration whenever $\verb|RAND_MAX|\%(\textbf{max}+1) \neq \textbf{max}$, occurrence of numbers in the range of $[0:\verb|RAND_MAX|\%(\textbf{max}+1)]$
+is one more than the numbers in the range of $[\verb|RAND_MAX|\%(\textbf{max}+1)+1:\textbf{max}]$. Therefore, probability of taking a random integer from $B$ is not equal for every element of $[0:\textbf{max}]$. What if we remove the last part of the $B$ ? We can obtain an array such that every element of the array has same number of occurrence in the array. This is what $\textit{randomIntegerMaxUnBiased}$ function do. If we illustrate it:
+\begin{center}
+$newA=[0,1,2,3,4,...\hspace*{1cm}             ...,\textbf{adjustedRandMax}]$
+\end{center}
+\begin{center}
+$newB=[0,1,2,...,\textbf{max}]+[0,1,2,...,\textbf{max}]+ ... +[0,1,2, ... ,\textbf{adjustedRandMax}\%(\textbf{max}+1)]$
+\end{center}
+Since $ \textbf{adjustedRandMax}\%(\textbf{max}+1)=\textbf{max}$,
+\begin{center}
+$newB=[0,1,2,...,\textbf{max}]+[0,1,2,...,\textbf{max}]+ \hspace*{1cm}... \hspace*{1cm}+[0,1,2, ... ,\textbf{max}]$
+\end{center}
+Obviously, probability of taking a random integer from $newB$ array is equal for every element of $[0:\textbf{max}]$ so $\textit{randomIntegerMaxUnBiased}$ function gives more fair random numbers than\\
+$\textit{randomIntegerMaxNaive}$ function.
+\section*{ANSWER 2}
+The game of $\textit{Dungeons and Dragons with Wumpus}$ starts with a configuration which is done by the user.
+Let's say $n$ is the chosen number of the magical rooms such that $n \in [2:8]$.
+Let's say $r$ is the chosen number of wumpuses such that $r<n$ and $r\in [1:4]$. In the game, defining two direction and assigning a room to these directions is being done by randomly so we can assume that switching from a room to another is a random event.\\
+\\Let's define a short notation for the room names;\\
+\hspace*{1cm}START   $\rightarrow$ S\\
+\hspace*{1cm}EXIT    $\rightarrow$ X\\
+\hspace*{1cm}GOLD    $\rightarrow$ G\\
+\hspace*{1cm}WUMPUS  $\rightarrow$ W\\
+\hspace*{1cm}EMPTY   $\rightarrow$ E\\
+\\
+Then, we can calculate the probabilities of the adventurer to:
+\subsection*{a. Get eaten by a Wumpus}
+Since we are looking for the games that ends in a wumpus' stomach, whether user get the gold or not is not important. Therefore, we will accept all rooms equivalent except for EXIT and WUMPUS. (START and GOLD rooms will be considered as an EMPTY for easy demonstration). Then, we have three types of rooms: W,X and E. We want paths that don't contain any X and have exactly one W which is at the end of the path.\\
+\begin{center}
+$P\{\textnormal{getting eaten by a wumpus}\}=P\{W\}+P\{EW\}+P\{EEW\}+P\{EEEW\}+ ... +P\{EEE...W\}$
+\end{center}
+We can visit infinitely many empty room before we get eaten by wumpus.(By the way, P is probability function and $P\{EEW\}$ means visiting two empty room then going to a room that contains wumpus etc.)\\
+Let's express the probability with the variables:\\
+\begin{center}
+$P\{\textnormal{getting eaten by a wumpus}\}=P\{W\}+P\{EW\}+P\{EEW\}+P\{EEEW\}+ ... +P\{EEE...W\}$
+\end{center}
+\begin{center}
+$=\cfrac{r}{n+1}\ +\ \bigg(\cfrac{n-r}{n+1}\bigg)\cfrac{r}{n+1}\ +\ {\bigg(\cfrac{n-r}{n+1}\bigg)}^{2}\cfrac{r}{n+1}\ +\ {\bigg(\cfrac{n-r}{n+1}\bigg)}^{3}\cfrac{r}{n+1}\ +\ ...$
+\end{center}
+\begin{center}
+$=\cfrac{r}{n+1}\ \underbrace{\Bigg({1\ +\ \bigg(\cfrac{n-r}{n+1}\bigg)\ +\ \bigg(\cfrac{n-r}{n+1}\bigg)}^{2}\ +\ {\bigg(\cfrac{n-r}{n+1}\bigg)}^{3}\ +\ ...\ \Bigg)}_\text{geometric serie}$
+\end{center}
+\begin{center}
+$P\{\textnormal{getting eaten by a wumpus}\}=\cfrac{r}{n+1}\ \Bigg(\ \cfrac{1}{1-\bigg(\cfrac{n-r}{n+1}\bigg)}\ \Bigg)$
+\end{center}
+\begin{center}
+$P\{\textnormal{getting eaten by a wumpus}\}=\cfrac{r}{n+1}\ \bigg(\cfrac{n+1}{r+1}\bigg)$
+\end{center}
+\begin{center}
+$P\{\textnormal{getting eaten by a wumpus}\}=\cfrac{r}{r+1}$
+\end{center}
+\subsection*{b. Exit the dungeon without the gold}
+Since we want to leave without gold, we can only visit empty rooms or start room before we go into the exit room.(Again, we considered START room as an EMPTY)
+\begin{center}
+$P\{\textnormal{exiting without the gold}\}=P\{X\}+P\{EX\}+P\{EEX\}+P\{EEEX\}+ ... +P\{EEE...X\}$
+\end{center}
+\begin{center}
+$=\cfrac{1}{n+1}\ +\ \bigg(\cfrac{n-r-1}{n+1}\bigg)\cfrac{1}{n+1}\ +\ {\bigg(\cfrac{n-r-1}{n+1}\bigg)}^{2}\cfrac{1}{n+1}\ +\ {\bigg(\cfrac{n-r-1}{n+1}\bigg)}^{3}\cfrac{1}{n+1}\ +\ ...$
+\end{center}
+\begin{center}
+$=\cfrac{1}{n+1}\ \underbrace{\Bigg({1\ +\ \bigg(\cfrac{n-r-1}{n+1}\bigg)\ +\ \bigg(\cfrac{n-r-1}{n+1}\bigg)}^{2}\ +\ {\bigg(\cfrac{n-r-1}{n+1}\bigg)}^{3}\ +\ ...\ \Bigg)}_\text{geometric serie}$
+\end{center}
+\begin{center}
+$P\{\textnormal{exiting without the gold}\}=\cfrac{1}{n+1}\ \Bigg(\ \cfrac{1}{1-\bigg(\cfrac{n-r-1}{n+1}\bigg)}\ \Bigg)$
+\end{center}
+\begin{center}
+$P\{\textnormal{exiting without the gold}\}=\cfrac{1}{n+1}\ \bigg(\cfrac{n+1}{r+2}\bigg)$
+\end{center}
+\begin{center}
+$P\{\textnormal{exiting without the gold}\}=\cfrac{1}{r+2}$
+\end{center}
+\subsection*{c. Exit the dungeon with the gold}
+Since getting eaten by a wumpus, exiting without the gold and exiting with the gold are disjoint events and union of them includes all outcomes, we can say:\\
+\begin{center}
+$1 = P\{\textnormal{getting eaten by a wumpus}\}+P\{\textnormal{exiting without the gold}\}+P\{\textnormal{exiting with the gold}\}$
+\end{center}
+\begin{center}
+$1 =\cfrac{r}{r+1}\ +\ \cfrac{1}{r+2} \ +\ P\{\textnormal{exiting with the gold}\}$
+\end{center}
+\begin{center}
+$1 =\cfrac{r^2+3r+1}{r^2+3r+2}\ +\ P\{\textnormal{exiting with the gold}\}$
+\end{center}
+\begin{center}
+$P\{\textnormal{exiting with the gold}\}=\cfrac{1}{r^2+3r+2}\ $
+\end{center}
+\section*{ANSWER 3}
+Dragons are the ones who play the game.
+\end{document}
